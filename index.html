@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>我的目標</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0D0D0D;--s1:#161610;--s2:#111118;--s3:#0E1610;--s4:#17100A;--s5:#13110A;
+  --b1:#242418;--b2:#1E1A2A;--b3:#1A261A;--b4:#281C10;--b5:#26220E;
+  --text:#D8D4C0;--text2:#8A8A78;--hint:#3E3E36;
+  --gold:#C8A86B;--gold-bg:#1E1808;--gold-b:#2E2410;
+  --purple:#7A6BB8;--purple-bg:#12101E;--purple-b:#1E1A2E;
+  --green:#5A9E6A;--green-bg:#0E160E;--green-b:#162416;
+  --amber:#D4813A;--amber-bg:#1A100A;--amber-b:#281A10;
+  --teal:#4A9EA8;--teal-bg:#0A1418;--teal-b:#122028;
+  --red:#D45050;--red-bg:#200A0A;--red-b:#300E0E;
+  --warn-soon:#C8963A;--warn-over:#D45050;
+  --r:14px;--rsm:8px;
+}
+html,body{min-height:100%;background:var(--bg);font-family:'Noto Sans TC',sans-serif;color:var(--text);-webkit-font-smoothing:antialiased}
+body{display:flex;justify-content:center;padding:0 0 100px}
+.app{width:100%;max-width:430px;min-height:100vh;background:var(--bg)}
+
+/* Header */
+.header{padding:52px 20px 18px;background:var(--bg);border-bottom:1px solid #1E1E1E;position:sticky;top:0;z-index:10}
+.header-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:18px}
+.header-left .page-title{font-size:26px;font-weight:700;color:#F2EDD8;letter-spacing:-0.5px;line-height:1}
+.header-left .page-sub{font-size:11px;color:var(--hint);margin-top:5px;letter-spacing:0.4px}
+.header-right{display:flex;align-items:center;gap:8px}
+.report-btn{padding:5px 13px;background:var(--s5);border:1px solid var(--b5);border-radius:20px;font-size:11px;font-weight:600;color:var(--gold);cursor:pointer;font-family:'Noto Sans TC',sans-serif;letter-spacing:0.3px}
+.date-badge{background:var(--s1);border:1px solid var(--b1);border-radius:20px;padding:5px 12px;font-size:11px;color:var(--hint);letter-spacing:0.3px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{border-radius:12px;padding:12px 8px;text-align:center}
+.stat-1{background:var(--s1);border:1px solid var(--b1)}
+.stat-2{background:var(--gold-bg);border:1px solid var(--gold-b)}
+.stat-3{background:var(--teal-bg);border:1px solid var(--teal-b)}
+.stat-n{font-size:20px;font-weight:700;line-height:1}
+.n-white{color:#F2EDD8}.n-gold{color:var(--gold)}.n-teal{color:var(--teal)}
+.stat-l{font-size:10px;color:var(--hint);margin-top:4px;letter-spacing:0.3px}
+
+/* Tabs */
+.tabs{display:flex;gap:6px;padding:12px 20px;overflow-x:auto;scrollbar-width:none;background:var(--bg);border-bottom:1px solid #1A1A1A;position:sticky;top:138px;z-index:9}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;padding:5px 13px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid #242424;background:transparent;color:var(--hint);transition:all .2s;font-family:'Noto Sans TC',sans-serif}
+.tab.active{background:var(--gold-bg);border-color:var(--gold-b);color:var(--gold)}
+.tab[data-cat="讀書"].active{background:var(--gold-bg);border-color:var(--gold-b);color:var(--gold)}
+.tab[data-cat="上課"].active{background:var(--purple-bg);border-color:var(--purple-b);color:var(--purple)}
+.tab[data-cat="學習"].active{background:var(--teal-bg);border-color:var(--teal-b);color:var(--teal)}
+.tab[data-cat="工作"].active{background:var(--green-bg);border-color:var(--green-b);color:var(--green)}
+.tab[data-cat="生活"].active{background:var(--amber-bg);border-color:var(--amber-b);color:var(--amber)}
+
+/* Focus */
+.focus-section{margin:14px 20px 0;background:var(--s5);border:1px solid var(--b5);border-radius:var(--r);overflow:hidden}
+.focus-header{display:flex;align-items:center;justify-content:space-between;padding:11px 14px 9px;border-bottom:1px solid #1E1A0E}
+.focus-title{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--gold);letter-spacing:0.8px;text-transform:uppercase}
+.focus-dot{width:6px;height:6px;border-radius:50%;background:var(--gold)}
+.focus-hint{font-size:10px;color:var(--hint)}
+.focus-item{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid #1A1608}
+.focus-item:last-child{border-bottom:none}
+.focus-num{font-size:10px;font-weight:700;color:var(--gold);min-width:16px}
+.focus-name{font-size:13px;color:var(--text);flex:1}
+.focus-pct{font-size:11px;font-weight:600;color:var(--hint)}
+.focus-empty{padding:12px 14px;font-size:12px;color:var(--hint)}
+
+/* Goal list */
+.goal-list{padding:14px 20px;display:flex;flex-direction:column;gap:10px}
+.goal-card{border-radius:var(--r);padding:14px 15px;position:relative;overflow:hidden;animation:fadeIn .3s ease forwards}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.goal-card.done{opacity:.45}
+.goal-card.done .ctitle{text-decoration:line-through;color:var(--hint)}
+.goal-card.warn-soon{box-shadow:inset 0 0 0 1px var(--warn-soon)}
+.goal-card.warn-over{box-shadow:inset 0 0 0 1px var(--warn-over)}
+
+.cat-書{background:var(--s1);border:1px solid var(--b1)}
+.cat-課{background:var(--s2);border:1px solid var(--b2)}
+.cat-習{background:var(--teal-bg);border:1px solid var(--teal-b)}
+.cat-工{background:var(--s3);border:1px solid var(--b3)}
+.cat-活{background:var(--s4);border:1px solid var(--b4)}
+
+.accent{position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:0}
+.acc-gold{background:var(--gold)}
+.acc-purple{background:var(--purple)}
+.acc-teal{background:var(--teal)}
+.acc-green{background:var(--green)}
+.acc-amber{background:var(--amber)}
+
+.badge-row{display:flex;align-items:center;gap:5px;margin-bottom:6px;padding-left:10px;flex-wrap:wrap}
+.cat-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;letter-spacing:0.2px}
+.cb-書{background:var(--gold-bg);color:var(--gold);border:1px solid var(--gold-b)}
+.cb-課{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-b)}
+.cb-習{background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-b)}
+.cb-工{background:var(--green-bg);color:var(--green);border:1px solid var(--green-b)}
+.cb-活{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-b)}
+.pri-badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px}
+.p-high{background:var(--red-bg);color:var(--red);border:1px solid var(--red-b)}
+.p-mid{background:#18140A;color:var(--warn-soon);border:1px solid #282008}
+.p-low{background:var(--green-bg);color:var(--green);border:1px solid var(--green-b)}
+.dl-badge{font-size:9px;padding:2px 7px;border-radius:4px;background:#1A1A14;color:var(--hint);border:1px solid #242418}
+.dl-soon{background:#1E1408;color:var(--warn-soon);border-color:#2E2010}
+.dl-over{background:var(--red-bg);color:var(--red);border-color:var(--red-b)}
+
+.ctitle{font-size:14px;font-weight:500;color:var(--text);padding-left:10px;margin-bottom:2px}
+.csub{font-size:11px;color:var(--hint);padding-left:10px;margin-bottom:8px}
+.bar-row{display:flex;justify-content:space-between;align-items:center;padding-left:10px;margin-bottom:5px}
+.bar-lbl{font-size:10px;color:var(--hint)}
+.bar-pct{font-size:12px;font-weight:700}
+.pct-gold{color:var(--gold)}.pct-purple{color:var(--purple)}.pct-teal{color:var(--teal)}.pct-green{color:var(--green)}.pct-amber{color:var(--amber)}
+.bar-track{height:3px;background:#1E1E1E;border-radius:2px;overflow:hidden;margin-left:10px}
+.bar-fill{height:100%;border-radius:2px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+.bf-gold{background:var(--gold)}.bf-purple{background:var(--purple)}.bf-teal{background:var(--teal)}.bf-green{background:var(--green)}.bf-amber{background:var(--amber)}
+
+.goal-actions{position:absolute;top:12px;right:12px;display:flex;gap:2px}
+.icon-btn{width:26px;height:26px;border-radius:6px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--hint);transition:background .15s,color .15s}
+.icon-btn:hover{background:#1E1E1E;color:var(--text)}
+.icon-btn.done-active{color:var(--green)}
+
+/* Subtasks */
+.subtasks{margin-top:8px;padding-top:8px;border-top:1px solid #1E1E1E}
+.sub-item{display:flex;align-items:center;gap:8px;padding:5px 10px}
+.sub-check{width:14px;height:14px;border-radius:3px;border:1px solid #2E2E26;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:8px;cursor:pointer;transition:all .15s}
+.sub-check.done{background:var(--gold-bg);border-color:var(--gold);color:var(--gold)}
+.sub-name{font-size:12px;color:var(--text2);flex:1}
+.sub-name.done{text-decoration:line-through;color:var(--hint)}
+.sub-del{font-size:10px;color:var(--hint);cursor:pointer;padding:2px 4px;opacity:.5}
+.add-sub-row{display:flex;gap:6px;padding:6px 10px}
+.add-sub-inp{flex:1;padding:6px 10px;background:#1A1A14;border:1px solid #262618;border-radius:var(--rsm);font-size:12px;color:var(--text);outline:none;font-family:'Noto Sans TC',sans-serif}
+.add-sub-inp:focus{border-color:var(--gold)}
+.add-sub-btn{padding:6px 12px;background:var(--gold-bg);border:1px solid var(--gold-b);color:var(--gold);border-radius:var(--rsm);font-size:12px;cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-weight:600}
+
+/* Inline edit */
+.inline-edit{display:none;margin-top:8px;padding:10px 10px 4px;border-top:1px solid #1E1E1E}
+.inline-edit.open{display:block}
+.ie-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.ie-label{font-size:11px;color:var(--hint);white-space:nowrap;min-width:52px}
+.ie-input{flex:1;padding:7px 10px;background:#1A1A14;border:1px solid #262618;border-radius:var(--rsm);font-size:13px;color:var(--text);outline:none;font-family:'Noto Sans TC',sans-serif}
+.ie-input:focus{border-color:var(--gold)}
+.ie-unit{font-size:11px;color:var(--hint);white-space:nowrap}
+.ie-sw{flex:1;display:flex;align-items:center;gap:8px}
+.ie-slider{flex:1;-webkit-appearance:none;height:3px;border-radius:2px;background:#1E1E1E;outline:none;cursor:pointer}
+.ie-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--gold);cursor:pointer;border:2px solid var(--bg)}
+.ie-pct{font-size:12px;font-weight:700;color:var(--gold);min-width:32px;text-align:right}
+.ie-save{width:100%;padding:8px;background:var(--gold-bg);border:1px solid var(--gold-b);color:var(--gold);border-radius:var(--rsm);font-size:12px;font-family:'Noto Sans TC',sans-serif;cursor:pointer;font-weight:600;margin-top:2px}
+
+.goal-note{font-size:11px;color:var(--hint);padding-left:10px;margin-top:6px;line-height:1.5}
+.empty-state{text-align:center;padding:56px 24px;color:var(--hint)}
+.empty-icon{font-size:28px;margin-bottom:10px}
+.empty-text{font-size:13px;line-height:1.7}
+
+/* FAB */
+.fab{position:fixed;bottom:28px;right:50%;transform:translateX(50%);max-width:430px;width:calc(100% - 48px);height:52px;background:var(--gold-bg);border:1px solid var(--gold);color:var(--gold);border-radius:26px;font-size:15px;font-weight:600;font-family:'Noto Sans TC',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;z-index:100;letter-spacing:0.3px;transition:transform .15s}
+.fab:active{transform:translateX(50%) scale(0.97)}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;align-items:flex-end;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:#111110;border-radius:24px 24px 0 0;border-top:1px solid #242418;padding:24px 22px 44px;width:100%;max-width:430px;animation:slideUp .3s cubic-bezier(.4,0,.2,1);max-height:94vh;overflow-y:auto}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-handle{width:36px;height:3px;background:#2A2A22;border-radius:2px;margin:0 auto 22px}
+.modal-title{font-size:18px;font-weight:700;color:#F2EDD8;margin-bottom:18px}
+.form-group{margin-bottom:13px}
+.form-label{font-size:11px;color:var(--hint);margin-bottom:5px;display:block;font-weight:600;letter-spacing:0.3px;text-transform:uppercase}
+.form-input,.form-select{width:100%;padding:11px 13px;background:#161610;border:1px solid #262618;border-radius:var(--rsm);font-size:14px;font-family:'Noto Sans TC',sans-serif;color:var(--text);outline:none;transition:border-color .2s;-webkit-appearance:none}
+.form-input:focus,.form-select:focus{border-color:var(--gold)}
+.form-select option{background:#161610}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hint-txt{font-size:11px;color:var(--hint);margin-top:4px}
+.pct-row{display:flex;align-items:center;gap:12px}
+.pct-row input[type=range]{flex:1;-webkit-appearance:none;height:3px;border-radius:2px;background:#1E1E1E;outline:none;cursor:pointer}
+.pct-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--gold);cursor:pointer;border:2px solid var(--bg)}
+.pct-display{font-size:14px;font-weight:700;color:var(--gold);min-width:38px;text-align:right}
+.pri-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pri-opt{padding:8px 0;border:1px solid #262618;border-radius:var(--rsm);font-size:12px;font-weight:600;text-align:center;cursor:pointer;font-family:'Noto Sans TC',sans-serif;background:#161610;color:var(--hint);transition:all .2s}
+.pri-opt.sel-高{background:var(--red-bg);border-color:var(--red-b);color:var(--red)}
+.pri-opt.sel-中{background:#18140A;border-color:#282008;color:var(--warn-soon)}
+.pri-opt.sel-低{background:var(--green-bg);border-color:var(--green-b);color:var(--green)}
+.modal-btn{width:100%;height:50px;background:var(--gold-bg);border:1px solid var(--gold);color:var(--gold);border-radius:var(--r);font-size:15px;font-weight:600;font-family:'Noto Sans TC',sans-serif;cursor:pointer;margin-top:6px;letter-spacing:0.3px}
+.cond{display:none}.cond.on{display:block}
+
+/* Report */
+.report-box{background:#0D0D0D;border:1px solid #1E1E1E;border-radius:var(--rsm);padding:14px;font-size:12px;line-height:2;color:var(--text);white-space:pre-wrap;margin-bottom:14px;max-height:55vh;overflow-y:auto;font-family:monospace}
+.copy-btn{width:100%;padding:12px;background:var(--gold-bg);border:1px solid var(--gold);color:var(--gold);border-radius:var(--r);font-size:14px;font-weight:600;font-family:'Noto Sans TC',sans-serif;cursor:pointer;letter-spacing:0.3px}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="header-top">
+      <div class="header-left">
+        <div class="page-title">我的目標</div>
+        <div class="page-sub">知識學習追蹤系統</div>
+      </div>
+      <div class="header-right">
+        <button class="report-btn" onclick="openReport()">週報</button>
+        <div class="date-badge" id="today-date"></div>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat stat-1"><div class="stat-n n-white" id="sum-total">0</div><div class="stat-l">全部目標</div></div>
+      <div class="stat stat-2"><div class="stat-n n-gold" id="sum-done">0</div><div class="stat-l">已完成</div></div>
+      <div class="stat stat-3"><div class="stat-n n-teal" id="sum-avg">0%</div><div class="stat-l">平均進度</div></div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-cat="全部" onclick="setFilter('全部',this)">全部</button>
+    <button class="tab" data-cat="讀書" onclick="setFilter('讀書',this)">讀書</button>
+    <button class="tab" data-cat="上課" onclick="setFilter('上課',this)">上課</button>
+    <button class="tab" data-cat="學習" onclick="setFilter('學習',this)">學習</button>
+    <button class="tab" data-cat="工作" onclick="setFilter('工作',this)">工作</button>
+    <button class="tab" data-cat="生活" onclick="setFilter('生活',this)">生活</button>
+  </div>
+
+  <div id="focus-wrap"></div>
+  <div class="goal-list" id="goal-list"></div>
+  <button class="fab" onclick="openAdd()">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    新增目標
+  </button>
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-ttl">新增目標</div>
+    <input type="hidden" id="eidx" value="-1">
+    <div class="form-group">
+      <label class="form-label">分類</label>
+      <select class="form-select" id="f-cat" onchange="onCat()">
+        <option value="讀書">讀書</option><option value="上課">上課</option>
+        <option value="學習">學習</option><option value="工作">工作</option><option value="生活">生活</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label" id="f-title-label">書名</label>
+      <input class="form-input" id="f-title" type="text" placeholder="例如：原子習慣">
+    </div>
+    <div class="form-group cond on" id="c-book">
+      <label class="form-label">讀書進度</label>
+      <div class="two-col">
+        <div><label class="form-label">總頁數</label><input class="form-input" id="f-total" type="number" placeholder="320" min="1"></div>
+        <div><label class="form-label">目前頁數</label><input class="form-input" id="f-cur" type="number" placeholder="0" min="0"></div>
+      </div>
+      <div class="hint-txt">進度自動計算百分比</div>
+    </div>
+    <div class="form-group cond" id="c-course">
+      <label class="form-label">上課進度</label>
+      <div class="two-col">
+        <div><label class="form-label">總章節數</label><input class="form-input" id="f-chapters" type="number" placeholder="12" min="1"></div>
+        <div><label class="form-label">目前章節</label><input class="form-input" id="f-curch" type="number" placeholder="0" min="0"></div>
+      </div>
+      <div class="hint-txt">進度自動計算百分比</div>
+    </div>
+    <div class="form-group cond" id="c-manual">
+      <label class="form-label">目前進度</label>
+      <div class="pct-row">
+        <input type="range" min="0" max="100" value="0" id="f-pct" oninput="document.getElementById('f-pctd').textContent=this.value+'%'">
+        <span class="pct-display" id="f-pctd">0%</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">優先順序</label>
+      <div class="pri-row">
+        <button class="pri-opt" id="pri-高" onclick="selPri('高')">⬆ 高</button>
+        <button class="pri-opt sel-中" id="pri-中" onclick="selPri('中')">➡ 中</button>
+        <button class="pri-opt" id="pri-低" onclick="selPri('低')">⬇ 低</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">截止日期（選填）</label>
+      <input class="form-input" id="f-deadline" type="date">
+    </div>
+    <div class="form-group">
+      <label class="form-label">備註（選填）</label>
+      <input class="form-input" id="f-note" type="text" placeholder="備忘、來源等">
+    </div>
+    <button class="modal-btn" onclick="saveGoal()">儲存目標</button>
+  </div>
+</div>
+
+<!-- Report Modal -->
+<div class="modal-overlay" id="report-modal" onclick="if(event.target===this)closeReport()">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">本週目標週報</div>
+    <div class="report-box" id="report-content"></div>
+    <button class="copy-btn" onclick="copyReport()">複製週報</button>
+  </div>
+</div>
+
+<script>
+const CAT_MAP = {
+  '讀書':{key:'書',acc:'acc-gold',pct:'pct-gold',fill:'bf-gold',card:'cat-書',cb:'cb-書'},
+  '上課':{key:'課',acc:'acc-purple',pct:'pct-purple',fill:'bf-purple',card:'cat-課',cb:'cb-課'},
+  '學習':{key:'習',acc:'acc-teal',pct:'pct-teal',fill:'bf-teal',card:'cat-習',cb:'cb-習'},
+  '工作':{key:'工',acc:'acc-green',pct:'pct-green',fill:'bf-green',card:'cat-工',cb:'cb-工'},
+  '生活':{key:'活',acc:'acc-amber',pct:'pct-amber',fill:'bf-amber',card:'cat-活',cb:'cb-活'},
+};
+
+let goals = JSON.parse(localStorage.getItem('gt_dark')||'[]');
+let filter = '全部';
+let selPriVal = '中';
+const save = () => localStorage.setItem('gt_dark', JSON.stringify(goals));
+
+function pct(g) {
+  if (g.cat==='讀書'&&g.total>0) return Math.min(100,Math.round(g.cur/g.total*100));
+  if (g.cat==='上課'&&g.chapters>0) return Math.min(100,Math.round(g.curch/g.chapters*100));
+  return g.pct||0;
+}
+
+function dlStatus(g) {
+  if (!g.deadline) return null;
+  const now=new Date();now.setHours(0,0,0,0);
+  const dl=new Date(g.deadline);
+  const diff=Math.round((dl-now)/(864e5));
+  return diff<0?'over':diff<=3?'soon':'ok';
+}
+
+function dlLabel(g) {
+  if (!g.deadline) return '';
+  const now=new Date();now.setHours(0,0,0,0);
+  const dl=new Date(g.deadline);
+  const diff=Math.round((dl-now)/(864e5));
+  if (diff<0) return `逾期 ${Math.abs(diff)} 天`;
+  if (diff===0) return '今天到期';
+  if (diff===1) return '明天到期';
+  return `${g.deadline.slice(5).replace('-','/')} 到期`;
+}
+
+function setFilter(cat,el) {
+  filter=cat;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+function render() {
+  const shown = filter==='全部'?goals:goals.filter(g=>g.cat===filter);
+  const pcts = goals.map(pct);
+  document.getElementById('sum-total').textContent = goals.length;
+  document.getElementById('sum-done').textContent = pcts.filter(p=>p>=100).length;
+  document.getElementById('sum-avg').textContent = (goals.length?Math.round(pcts.reduce((a,p)=>a+p,0)/goals.length):0)+'%';
+  renderFocus();
+  renderList(shown);
+}
+
+function renderFocus() {
+  const wrap=document.getElementById('focus-wrap');
+  const active=goals.filter(g=>pct(g)<100).sort((a,b)=>{
+    const o={'高':0,'中':1,'低':2};
+    return (o[a.pri||'中'])-(o[b.pri||'中']);
+  }).slice(0,3);
+  if (!active.length){wrap.innerHTML='';return;}
+  const rows=active.map((g,i)=>`
+    <div class="focus-item">
+      <span class="focus-num">0${i+1}</span>
+      <span class="focus-name">${g.title}</span>
+      <span class="focus-pct">${pct(g)}%</span>
+    </div>`).join('');
+  wrap.innerHTML=`<div class="focus-section">
+    <div class="focus-header">
+      <div class="focus-title"><div class="focus-dot"></div>今日聚焦</div>
+      <span class="focus-hint">依優先順序</span>
+    </div>${rows}</div>`;
+}
+
+function renderList(shown) {
+  const list=document.getElementById('goal-list');
+  if (!shown.length){
+    list.innerHTML='<div class="empty-state"><div class="empty-icon">✦</div><div class="empty-text">還沒有目標<br>點下方按鈕新增第一個</div></div>';
+    return;
+  }
+  list.innerHTML=shown.map(g=>{
+    const i=goals.indexOf(g);
+    const p=pct(g);
+    const done=p>=100;
+    const ds=dlStatus(g);
+    const dl=dlLabel(g);
+    const cm=CAT_MAP[g.cat]||CAT_MAP['學習'];
+    let cardCls=`goal-card ${cm.card}${done?' done':''}${ds==='soon'?' warn-soon':ds==='over'?' warn-over':''}`;
+
+    let sub='';
+    if (g.cat==='讀書'&&g.total) sub=`第 ${g.cur||0} 頁 / 共 ${g.total} 頁`;
+    else if (g.cat==='上課'&&g.chapters) sub=`第 ${g.curch||0} 章 / 共 ${g.chapters} 章`;
+
+    const subs=g.subtasks||[];
+    const subDone=subs.filter(s=>s.done).length;
+
+    let dlBadge='';
+    if (dl){const dc=ds==='over'?'dl-over':ds==='soon'?'dl-soon':'';dlBadge=`<span class="dl-badge ${dc}">${dl}</span>`;}
+
+    const subHtml=`<div class="subtasks">
+      ${subs.map((s,si)=>`<div class="sub-item">
+        <div class="sub-check${s.done?' done':''}" onclick="toggleSub(${i},${si})">${s.done?'✓':''}</div>
+        <span class="sub-name${s.done?' done':''}">${s.name}</span>
+        <span class="sub-del" onclick="delSub(${i},${si})">✕</span>
+      </div>`).join('')}
+      <div class="add-sub-row">
+        <input class="add-sub-inp" id="si-${i}" type="text" placeholder="新增子任務…" onkeydown="if(event.key==='Enter')addSub(${i})">
+        <button class="add-sub-btn" onclick="addSub(${i})">+</button>
+      </div>
+    </div>`;
+
+    let ieF='';
+    if (g.cat==='讀書'){
+      ieF=`<div class="ie-row"><span class="ie-label">目前頁數</span><input class="ie-input" type="number" id="ie-c-${i}" value="${g.cur||0}" min="0"><span class="ie-unit">/ ${g.total||'?'} 頁</span></div>
+        <div class="ie-row"><span class="ie-label">總頁數</span><input class="ie-input" type="number" id="ie-t-${i}" value="${g.total||0}" min="1"></div>`;
+    } else if (g.cat==='上課'){
+      ieF=`<div class="ie-row"><span class="ie-label">目前章節</span><input class="ie-input" type="number" id="ie-c-${i}" value="${g.curch||0}" min="0"><span class="ie-unit">/ ${g.chapters||'?'} 章</span></div>
+        <div class="ie-row"><span class="ie-label">總章節</span><input class="ie-input" type="number" id="ie-t-${i}" value="${g.chapters||0}" min="1"></div>`;
+    } else {
+      ieF=`<div class="ie-row"><span class="ie-label">進度</span>
+        <div class="ie-sw"><input type="range" class="ie-slider" id="ie-c-${i}" min="0" max="100" value="${p}" oninput="document.getElementById('ie-p-${i}').textContent=this.value+'%'">
+        <span class="ie-pct" id="ie-p-${i}">${p}%</span></div></div>`;
+    }
+
+    return `<div class="${cardCls}" id="card-${i}">
+      <div class="accent ${cm.acc}"></div>
+      <div class="goal-actions">
+        <button class="icon-btn${done?' done-active':''}" onclick="toggleDone(${i})" title="完成">✓</button>
+        <button class="icon-btn" onclick="toggleIE(${i})" title="編輯進度">✎</button>
+        <button class="icon-btn" onclick="openEdit(${i})" title="編輯">⋯</button>
+        <button class="icon-btn" onclick="delGoal(${i})" title="刪除">✕</button>
+      </div>
+      <div class="badge-row">
+        <span class="cat-badge ${cm.cb}">${g.cat}</span>
+        <span class="pri-badge p-${g.pri||'中'}">${g.pri||'中'}</span>
+        ${dlBadge}
+      </div>
+      <div class="ctitle">${g.title}</div>
+      ${sub?`<div class="csub">${sub}</div>`:''}
+      ${subs.length?`<div class="csub">子任務 ${subDone}/${subs.length} 完成</div>`:''}
+      <div class="bar-row"><span class="bar-lbl">進度</span><span class="bar-pct ${cm.pct}">${p}%</span></div>
+      <div class="bar-track"><div class="bar-fill ${cm.fill}" id="pf-${i}" style="width:${p}%"></div></div>
+      <div class="inline-edit" id="ie-${i}">${ieF}<button class="ie-save" onclick="saveIE(${i})">儲存進度</button></div>
+      ${subHtml}
+      ${g.note?`<div class="goal-note">${g.note}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function addSub(i){const inp=document.getElementById('si-'+i);const n=inp.value.trim();if(!n)return;if(!goals[i].subtasks)goals[i].subtasks=[];goals[i].subtasks.push({name:n,done:false});save();render();}
+function toggleSub(i,si){goals[i].subtasks[si].done=!goals[i].subtasks[si].done;const g=goals[i];if(g.cat!=='讀書'&&g.cat!=='上課'){const s=g.subtasks||[];if(s.length)g.pct=Math.round(s.filter(x=>x.done).length/s.length*100);}save();render();}
+function delSub(i,si){goals[i].subtasks.splice(si,1);save();render();}
+function toggleIE(i){document.getElementById('ie-'+i).classList.toggle('open');}
+function saveIE(i){const g=goals[i];const c=document.getElementById('ie-c-'+i);const t=document.getElementById('ie-t-'+i);if(g.cat==='讀書'){g.cur=parseInt(c.value)||0;if(t)g.total=parseInt(t.value)||g.total;}else if(g.cat==='上課'){g.curch=parseInt(c.value)||0;if(t)g.chapters=parseInt(t.value)||g.chapters;}else{g.pct=parseInt(c.value)||0;}save();render();}
+function toggleDone(i){const g=goals[i];const p=pct(g);if(p>=100){if(g.cat==='讀書')g.cur=0;else if(g.cat==='上課')g.curch=0;else g.pct=0;}else{if(g.cat==='讀書')g.cur=g.total||0;else if(g.cat==='上課')g.curch=g.chapters||0;else g.pct=100;}save();render();}
+function delGoal(i){if(confirm('確定刪除這個目標？')){goals.splice(i,1);save();render();}}
+
+function selPri(v){selPriVal=v;['高','中','低'].forEach(p=>{const el=document.getElementById('pri-'+p);el.className='pri-opt'+(v===p?' sel-'+p:'');});}
+
+function onCat(){
+  const cat=document.getElementById('f-cat').value;
+  const lbl=document.getElementById('f-title-label');
+  const inp=document.getElementById('f-title');
+  ['c-book','c-course','c-manual'].forEach(id=>document.getElementById(id).classList.remove('on'));
+  if(cat==='讀書'){lbl.textContent='書名';inp.placeholder='例如：原子習慣';document.getElementById('c-book').classList.add('on');}
+  else if(cat==='上課'){lbl.textContent='課程名稱';inp.placeholder='例如：Claude 入門課程';document.getElementById('c-course').classList.add('on');}
+  else{lbl.textContent='目標名稱';inp.placeholder='例如：每週運動三次';document.getElementById('c-manual').classList.add('on');}
+}
+
+function resetForm(){document.getElementById('eidx').value='-1';document.getElementById('f-cat').value='讀書';onCat();['f-title','f-note','f-total','f-cur','f-chapters','f-curch','f-deadline'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});document.getElementById('f-pct').value=0;document.getElementById('f-pctd').textContent='0%';selPri('中');}
+
+function openAdd(){document.getElementById('modal-ttl').textContent='新增目標';resetForm();document.getElementById('modal').classList.add('open');setTimeout(()=>document.getElementById('f-title').focus(),300);}
+function openEdit(i){const g=goals[i];document.getElementById('modal-ttl').textContent='編輯目標';document.getElementById('eidx').value=i;document.getElementById('f-cat').value=g.cat;onCat();document.getElementById('f-title').value=g.title;document.getElementById('f-note').value=g.note||'';document.getElementById('f-deadline').value=g.deadline||'';selPri(g.pri||'中');if(g.cat==='讀書'){document.getElementById('f-total').value=g.total||'';document.getElementById('f-cur').value=g.cur||0;}else if(g.cat==='上課'){document.getElementById('f-chapters').value=g.chapters||'';document.getElementById('f-curch').value=g.curch||0;}else{const p=g.pct||0;document.getElementById('f-pct').value=p;document.getElementById('f-pctd').textContent=p+'%';}document.getElementById('modal').classList.add('open');}
+function closeModal(){document.getElementById('modal').classList.remove('open');}
+
+function saveGoal(){const title=document.getElementById('f-title').value.trim();if(!title){document.getElementById('f-title').focus();return;}const cat=document.getElementById('f-cat').value;const note=document.getElementById('f-note').value.trim();const deadline=document.getElementById('f-deadline').value;const ei=parseInt(document.getElementById('eidx').value);let obj={title,cat,note,deadline,pri:selPriVal};if(cat==='讀書'){obj.total=parseInt(document.getElementById('f-total').value)||0;obj.cur=parseInt(document.getElementById('f-cur').value)||0;}else if(cat==='上課'){obj.chapters=parseInt(document.getElementById('f-chapters').value)||0;obj.curch=parseInt(document.getElementById('f-curch').value)||0;}else{obj.pct=parseInt(document.getElementById('f-pct').value)||0;}if(ei>=0){obj.subtasks=goals[ei].subtasks||[];goals[ei]=obj;}else{obj.subtasks=[];goals.unshift(obj);}save();closeModal();render();}
+
+function openReport(){
+  const now=new Date();const dateStr=`${now.getFullYear()}/${now.getMonth()+1}/${now.getDate()}`;
+  const cats=['讀書','上課','學習','工作','生活'];
+  let lines=[`📋 目標週報｜${dateStr}\n`];
+  lines.push(`總目標：${goals.length} 個　已完成：${goals.filter(g=>pct(g)>=100).length} 個　平均進度：${goals.length?Math.round(goals.map(pct).reduce((a,p)=>a+p,0)/goals.length):0}%\n`);
+  const urgent=goals.filter(g=>dlStatus(g)==='over'||dlStatus(g)==='soon');
+  if(urgent.length){lines.push('⚠️ 需要注意');urgent.forEach(g=>lines.push(`  • ${g.title}（${dlLabel(g)}，進度 ${pct(g)}%）`));lines.push('');}
+  cats.forEach(cat=>{const cg=goals.filter(g=>g.cat===cat);if(!cg.length)return;lines.push(`【${cat}】`);cg.forEach(g=>{const p=pct(g);const s=g.subtasks||[];let row=`  ${p>=100?'✅':'◉'} ${g.title}　${p}%`;if(s.length)row+=`　子任務 ${s.filter(x=>x.done).length}/${s.length}`;if(g.deadline)row+=`　${dlLabel(g)}`;lines.push(row);});lines.push('');});
+  lines.push('─────────────────');lines.push('由「我的目標」知識追蹤系統產生');
+  document.getElementById('report-content').textContent=lines.join('\n');
+  document.getElementById('report-modal').classList.add('open');
+}
+function closeReport(){document.getElementById('report-modal').classList.remove('open');}
+function copyReport(){const text=document.getElementById('report-content').textContent;navigator.clipboard.writeText(text).then(()=>{const btn=document.querySelector('.copy-btn');btn.textContent='已複製！';setTimeout(()=>btn.textContent='複製週報',2000);});}
+
+const now=new Date();const days=['日','一','二','三','四','五','六'];
+document.getElementById('today-date').textContent=`${now.getMonth()+1}/${now.getDate()} 週${days[now.getDay()]}`;
+
+if(!goals.length){
+  const d=new Date();d.setDate(d.getDate()+2);const soon=d.toISOString().split('T')[0];
+  goals=[
+    {title:'原子習慣',cat:'讀書',total:320,cur:210,note:'每天睡前 30 分鐘',pri:'高',deadline:'',subtasks:[{name:'第一章：複利的力量',done:true},{name:'第二章：習慣迴路',done:true},{name:'第三章：動機的迷思',done:false}]},
+    {title:'Claude AI 入門課',cat:'上課',chapters:12,curch:5,note:'',pri:'中',deadline:soon,subtasks:[]},
+    {title:'完成 Q2 專案提案',cat:'工作',pct:40,note:'',pri:'高',deadline:'2025-06-30',subtasks:[{name:'市場調查',done:true},{name:'競品分析',done:false},{name:'簡報製作',done:false}]},
+    {title:'每週運動三次',cat:'生活',pct:80,note:'',pri:'低',deadline:'',subtasks:[]},
+  ];
+  save();
+}
+render();
+</script>
+</body>
+</html>
